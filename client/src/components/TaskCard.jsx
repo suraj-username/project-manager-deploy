@@ -138,18 +138,18 @@ const TaskCard = ({ task, subtasks = [], project, currentUser, onRefresh }) => {
       <h4>{task.name}</h4>
       <p>{task.description || 'No description'}</p>
       <div className="task-meta">
-        <span className={`task-priority-${task.priority.toLowerCase()}`}>
-          {task.priority}
-        </span>
+        {/* FIX: Only show priority if it is NOT a subtask */}
+        {!isSubtask && (
+          <span className={`task-priority-${task.priority.toLowerCase()}`}>
+            {task.priority}
+          </span>
+        )}
          
-         {/* FIX: Show assignees even for subtasks */}
          {task.assignees && task.assignees.length > 0 && (
           <div className="task-assignees">
             Assigned: {task.assignees.map(a => a.name || '...').join(', ')}
           </div>
         )}
-         
-         {/* FIX: Removed Subtask Status Span completely */}
       </div>
 
       <div className="task-actions">
