@@ -1,8 +1,9 @@
-/**
- * Reusable API Client Function
- * This function handles adding the auth token and error handling for all
- * the 'fetch' requests.
- */
+// --- DEPLOYMENT FIX ---
+// In Vite, env variables must start with VITE_
+// If VITE_API_BASE_URL is set (Production), use it.
+// Otherwise, fall back to empty string '' which means "use relative path" (Localhost Proxy).
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '';
+
 const apiClient = async (url, options = {}) => {
   const token = localStorage.getItem('project-manager-token');
   const headers = {
@@ -19,10 +20,14 @@ const apiClient = async (url, options = {}) => {
   };
   if (options.data) {
     config.body = JSON.stringify(options.data);
-    delete config.data; // Clean up
+    delete config.data;
   }
 
-  const res = await fetch(url, config);
+  // Prepend the Base URL
+  // If url starts with /, API_BASE_URL + url works perfectly.
+  const fullUrl = `${API_BASE_URL}${url}`;
+
+  const res = await fetch(fullUrl, config);
 
   if (res.status === 401) {
     console.error('Unauthorized. Logging out.');

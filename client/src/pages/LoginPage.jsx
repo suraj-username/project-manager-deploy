@@ -1,13 +1,14 @@
 import React from 'react';
 
-/**
- * This is the public-facing login page.
- * Its only job is to provide a button that links to our
- * backend's Google OAuth route.
- */
 function LoginPage() {
   const handleLogin = () => {
-    window.location.href = '/api/auth/google';
+    // --- DEPLOYMENT FIX ---
+    // If we are in production, we need the full backend URL.
+    // If we are in dev, relative path '/api/...' is fine via proxy.
+    const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '';
+    
+    // Redirect the browser to the backend
+    window.location.href = `${API_BASE_URL}/api/auth/google`;
   };
 
   return (
