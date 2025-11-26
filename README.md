@@ -1,4 +1,4 @@
-# Project Manager (project-manager-deploy)
+# Project Tracking (project-manager-deploy)
 
 ![status](https://img.shields.io/badge/status-WIP-yellow)
 
@@ -62,7 +62,7 @@ Create a `.env` file inside `server/` (copy `.env.example` if present). At minim
 ```
 MONGO_URI=mongodb://localhost:27017/project-manager
 JWT_SECRET=replace-with-a-strong-secret
-PORT=5000
+PORT=3000
 ```
 
 Adjust values to point to your MongoDB and a secure JWT secret.
