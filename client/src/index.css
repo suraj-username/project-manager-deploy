@@ -5,7 +5,7 @@
 
   color-scheme: dark;
   color: rgba(255, 255, 255, 0.87);
-  background-color: #242424; /* Fallback */
+  background-color: #242424; 
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -13,13 +13,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* --- THE FIX: Target ALL layers of the page --- */
+
 html, body, #root {
   margin: 0;
   padding: 0;
   width: 100%;
   min-height: 100vh;
-  background-color: #242424 !important; /* Force Dark Grey everywhere */
+  background-color: #242424 !important; 
   color: rgba(255, 255, 255, 0.87);
 }
 

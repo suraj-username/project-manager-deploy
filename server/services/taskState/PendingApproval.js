@@ -10,7 +10,6 @@ export class PendingApprovalState extends TaskState {
    * @param {Object} user - The user attempting the action.
    */
   approve(user) {
-    // FR3.3: Only the project creator can approve
     if (!this.isProjectCreator(user)) {
       throw new Error(
         'Not authorized: Only the project creator can approve tasks.'
@@ -18,7 +17,4 @@ export class PendingApprovalState extends TaskState {
     }
     this.task.status = 'To Do';
   }
-
-  // All other state transition methods (e.g., moveToInProgress, moveToDone)
-  // are inherited from TaskState and will correctly throw a "Forbidden" error.
 }

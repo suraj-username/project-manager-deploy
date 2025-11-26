@@ -2,13 +2,10 @@ import React, { useState } from 'react';
 import apiClient from '../services/apiClient';
 
 const AssignTaskModal = ({ task, project, onClose, onTaskUpdated }) => {
-  // Pre-select existing assignees
   const [selectedAssignees, setSelectedAssignees] = useState(
     task.assignees ? task.assignees.map(u => u._id) : []
   );
   const [isSubmitting, setIsSubmitting] = useState(false);
-
-  // 1. Gather all unique members (Creator + Team)
   const allMembersMap = new Map();
   if (project.projectCreator) {
     allMembersMap.set(project.projectCreator._id, project.projectCreator);
@@ -19,8 +16,6 @@ const AssignTaskModal = ({ task, project, onClose, onTaskUpdated }) => {
     });
   }
   const allMembers = Array.from(allMembersMap.values());
-
-  // 2. Handle Checkbox Toggles
   const handleCheckboxChange = (userId) => {
     setSelectedAssignees(prev => {
       if (prev.includes(userId)) {
@@ -30,8 +25,6 @@ const AssignTaskModal = ({ task, project, onClose, onTaskUpdated }) => {
       }
     });
   };
-
-  // 3. Submit Update
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);

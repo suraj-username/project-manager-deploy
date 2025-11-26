@@ -6,7 +6,6 @@ function LoginPage() {
     // If we are in production, we need the full backend URL.
     // If we are in dev, relative path '/api/...' is fine via proxy.
     const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '';
-    
     // Redirect the browser to the backend
     window.location.href = `${API_BASE_URL}/api/auth/google`;
   };

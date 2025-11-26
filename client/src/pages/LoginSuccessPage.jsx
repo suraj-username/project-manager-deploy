@@ -21,12 +21,8 @@ function LoginSuccessPage() {
     } else {
       console.error('No token found in URL.');
     }
-    // The `replace: true` option replaces the /login/success page in the
-    // browser's history, so the user can't click "back" to it.
     navigate('/', { replace: true });
   }, [searchParams, navigate]);
-
-  // This component renders nothing, as it just redirects.
   return null;
 }
 

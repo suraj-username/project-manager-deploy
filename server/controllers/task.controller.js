@@ -28,8 +28,8 @@ export const createTask = asyncHandler(async (req, res) => {
     description: description || '',
     project: projectId,
     createdBy: req.user._id,
-    status: 'Pending Approval', // Default fallback
-    priority: 'Low', // Default fallback
+    status: 'Pending Approval', 
+    priority: 'Low', 
     parentId: parentId || null,
   };
 
@@ -39,17 +39,13 @@ export const createTask = asyncHandler(async (req, res) => {
       res.status(404);
       throw new Error('Parent task not found.');
     }
-    // Prevent nesting subtasks under existing subtasks
+    
     if (parentTask.parentId) {
        res.status(400);
        throw new Error('Cannot create a subtask under another subtask.');
     }
-    // Subtasks inherit parent priority
     taskData.priority = parentTask.priority;
-    
-    // --- NEW: Subtasks inherit parent status ---
     taskData.status = parentTask.status;
-    // ------------------------------------------
   }
 
   const task = await Task.create(taskData);
@@ -63,22 +59,19 @@ export const getProjectTasks = asyncHandler(async (req, res) => {
   const { projectId } = req.params;
 
   const tasks = await Task.find({ project: projectId })
-    .populate('createdBy', 'name email') // Populate creator details
-    .populate('assignees', 'name email'); // Populate assignee details
+    .populate('createdBy', 'name email') 
+    .populate('assignees', 'name email'); 
 
   const priorityOrder = { 'High': 1, 'Medium': 2, 'Low': 3 };
 
-  // Sort primarily by priority
   tasks.sort((a, b) => {
       const priorityDiff = priorityOrder[a.priority] - priorityOrder[b.priority];
       if (priorityDiff !== 0) return priorityDiff;
       return 0;
   });
 
-
-  // Separate root tasks and subtasks
   const rootTasks = [];
-  const subtasksMap = {}; // Use a map for easier lookup: { parentId: [subtasks] }
+  const subtasksMap = {}; 
 
   tasks.forEach(task => {
     if (task.parentId) {
@@ -94,7 +87,6 @@ export const getProjectTasks = asyncHandler(async (req, res) => {
 
    for (const parentId in subtasksMap) {
        subtasksMap[parentId].sort((a, b) => {
-            // Sort subtasks by creation date
             return new Date(a.createdAt) - new Date(b.createdAt);
         });
    }
@@ -109,11 +101,7 @@ export const getProjectTasks = asyncHandler(async (req, res) => {
 // @access Private (Project Creator)
 export const deleteTask = asyncHandler(async (req, res) => {
   const task = req.task;
-
-  // Find and delete all direct subtasks first
   await Task.deleteMany({ parentId: task._id });
-
-  // Delete the main task
   await Task.deleteOne({ _id: task._id });
 
   res.status(200).json({ message: 'Task and its subtasks deleted successfully.' });
@@ -128,7 +116,6 @@ export const updateTaskStatus = asyncHandler(async (req, res) => {
   const project = req.project;
   const user = req.user;
 
-  // Prevent status changes on subtasks directly
   if (task.parentId) {
       res.status(400);
       throw new Error('Cannot change status of a subtask directly.');
@@ -136,13 +123,11 @@ export const updateTaskStatus = asyncHandler(async (req, res) => {
 
   const state = createTaskState(task, project);
 
-  // Use a switch or if/else based on the action string
   switch (action) {
     case 'approve':
       state.approve(user);
       break;
     case 'moveToInProgress':
-      // Ensure assignees are provided and are valid IDs
       if (!assignees || !Array.isArray(assignees) || assignees.length === 0) {
          res.status(400);
          throw new Error('Assignees array is required to move task to In Progress.');
@@ -164,8 +149,6 @@ export const updateTaskStatus = asyncHandler(async (req, res) => {
   }
 
   const updatedTask = await task.save();
-
-  // Populate necessary fields before sending back
   await updatedTask.populate('createdBy', 'name email');
   await updatedTask.populate('assignees', 'name email');
 
@@ -180,8 +163,6 @@ export const changeTaskPriority = asyncHandler(async (req, res) => {
   const task = req.task;
   const project = req.project;
   const user = req.user;
-
-   // Prevent priority changes on subtasks
    if (task.parentId) {
         res.status(400);
         throw new Error('Cannot change priority of a subtask directly.');
@@ -197,8 +178,6 @@ export const changeTaskPriority = asyncHandler(async (req, res) => {
   state.changePriority(user, priority);
 
   const updatedTask = await task.save();
-
-  // Populate necessary fields
   await updatedTask.populate('createdBy', 'name email');
   await updatedTask.populate('assignees', 'name email');
 
@@ -229,8 +208,6 @@ export const updateTask = asyncHandler(async (req, res) => {
   if (assignees !== undefined) {
     const isCreator = project.projectCreator.toString() === req.user.id;
     const isAdmin = req.user.role === 'admin';
-
-    // Strict Security Check
     if (!isCreator && !isAdmin) {
        res.status(403);
        throw new Error("Not authorized: Only Project Creator or Admin can manually edit assignees.");
@@ -245,8 +222,6 @@ export const updateTask = asyncHandler(async (req, res) => {
   }
 
   const updatedTask = await task.save();
-
-  // Populate so the frontend gets the names immediately
   await updatedTask.populate('createdBy', 'name email');
   await updatedTask.populate('assignees', 'name email');
 

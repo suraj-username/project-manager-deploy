@@ -6,7 +6,6 @@ import { TaskState } from './TaskState.js';
  */
 export class DoneState extends TaskState {
   moveBackToInProgress(user) {
-    // FR3.6: Any team member can move
     if (!this.isTeamMember(user)) {
       throw new Error('Not authorized: You are not a member of this project.');
     }

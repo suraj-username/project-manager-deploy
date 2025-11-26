@@ -22,7 +22,6 @@ export const createProject = asyncHandler(async(req,res)=>{
 // @desc Get all projects (Admin sees all, User sees theirs)
 // @route GET /api/projects
 export const getMyProjects = asyncHandler(async(req,res)=>{
-    // --- DEBUG LOGS ---
     console.log(`User: ${req.user.name}, Role: ${req.user.role}`);
     
     let query;
@@ -30,7 +29,7 @@ export const getMyProjects = asyncHandler(async(req,res)=>{
     // --- ADMIN CHECK ---
     if (req.user.role === 'admin') {
         console.log('Admin detected. Fetching ALL projects.');
-        query = {}; // Empty object means "find everything"
+        query = {}; 
     } else {
         console.log('User detected. Fetching assigned projects.');
         query = {
@@ -49,8 +48,6 @@ export const getMyProjects = asyncHandler(async(req,res)=>{
     res.status(200).json(projects);
 });
 
-// ... (Keep the rest of the file EXACTLY as it was: getProjectById, updateProject, deleteProject, addMember, removeMember)
-// ... If you need the full file content again, let me know, but usually just replacing getMyProjects is enough.
 export const getProjectById=asyncHandler(async(req,res)=>{
     const project = await Project.findById(req.project._id)
     .populate('projectCreator','name email')

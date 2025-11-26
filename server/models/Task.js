@@ -51,12 +51,7 @@ const taskSchema = new Schema(
   }
 );
 
-// Create a compound index to quickly find all tasks for a project
 taskSchema.index({ project: 1 });
-
-// Create a sparse index to quickly find top-level tasks (where parentId is null)
 taskSchema.index({ parentId: 1 }, { sparse: true });
-
 const Task = mongoose.model('Task', taskSchema);
-
 export default Task;

@@ -5,17 +5,12 @@ export class TaskState {
   }
 
   isProjectCreator(user) {
-    // --- FIX: Allow Admin ---
     if (user.role === 'admin') return true;
-    // ------------------------
     return user._id.toString() === this.project.projectCreator.toString();
   }
 
   isTeamMember(user) {
-    // --- FIX: Allow Admin ---
     if (user.role === 'admin') return true;
-    // ------------------------
-    
     const userId = user._id.toString();
     if (this.isProjectCreator(user)) return true;
     
@@ -23,8 +18,6 @@ export class TaskState {
       (memberId) => memberId.toString() === userId
     );
   }
-
-  // CORRECTED: Using template literal backticks (`) instead of single quotes (')
   throwForbidden(action) {
     throw new Error(`Action '${action}' is not allowed in state '${this.task.status}'.`);
   }

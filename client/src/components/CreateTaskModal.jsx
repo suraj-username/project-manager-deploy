@@ -30,8 +30,8 @@ const CreateTaskModal = ({
       });
 
       alert('New task created and sent for approval.');
-      onTaskCreated(); // This refreshes the task list
-      onClose(); // This closes the modal
+      onTaskCreated(); 
+      onClose(); 
     } catch (err) {
       console.error(err);
       alert(`Error Creating Task: ${err.message}`);

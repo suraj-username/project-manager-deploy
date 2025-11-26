@@ -8,16 +8,11 @@ const TaskCard = ({ task, subtasks = [], project, currentUser, onRefresh }) => {
   const [showSubtaskModal, setShowSubtaskModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showAssignModal, setShowAssignModal] = useState(false);
-
-  // --- PERMISSIONS LOGIC ---
   const isProjectOwner = currentUser?._id === project?.projectCreator?._id;
   const isAdmin = currentUser?.role === 'admin';
   const isPowerUser = isProjectOwner || isAdmin;
-  
   const isTeamMember = project?.teamMembers?.some(member => member._id === currentUser?._id) || isPowerUser;
   const isSubtask = !!task.parentId;
-
-  // --- API HANDLERS ---
   const updateStatus = async (action, assignees = null) => {
     if (isSubtask) {
         alert("Subtask status cannot be changed directly.");
@@ -60,7 +55,6 @@ const TaskCard = ({ task, subtasks = [], project, currentUser, onRefresh }) => {
      }
   };
 
-  // --- START TASK LOGIC ---
   const handleStartTask = () => {
     if (isSubtask) return;
 
@@ -90,7 +84,6 @@ const TaskCard = ({ task, subtasks = [], project, currentUser, onRefresh }) => {
     }
   };
 
-  // --- ALLOWED ACTIONS ---
   const allowedActions = () => {
     const actions = {
         canApprove: false,
@@ -138,7 +131,6 @@ const TaskCard = ({ task, subtasks = [], project, currentUser, onRefresh }) => {
       <h4>{task.name}</h4>
       <p>{task.description || 'No description'}</p>
       <div className="task-meta">
-        {/* FIX: Only show priority if it is NOT a subtask */}
         {!isSubtask && (
           <span className={`task-priority-${task.priority.toLowerCase()}`}>
             {task.priority}

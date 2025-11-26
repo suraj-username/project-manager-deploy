@@ -15,15 +15,11 @@ export const isTaskTeamMember = asyncHandler(async (req, res, next) => {
     res.status(404);
     throw new Error('Project associated with this task not found');
   }
-
-  // --- NEW: Admin Override ---
   if (req.user.role === 'admin') {
       req.task = task;
       req.project = project;
       return next();
   }
-  // ---------------------------
-
   const creatorId = project.projectCreator.toString();
   const isMember = project.teamMembers.some(
     (memberId) => memberId.toString() === userId
@@ -41,7 +37,6 @@ export const isTaskTeamMember = asyncHandler(async (req, res, next) => {
 
 export const isTaskProjectCreator = asyncHandler(async (req, res, next) => {
   let project = req.project;
-  // If middleware chain didn't set project yet, fetch it
   if (!project) {
     const { taskId } = req.params;
     const task = await Task.findById(taskId);
@@ -57,13 +52,9 @@ export const isTaskProjectCreator = asyncHandler(async (req, res, next) => {
     req.task = task;
     req.project = project;
   }
-
-  // --- NEW: Admin Override ---
   if (req.user.role === 'admin') {
       return next();
   }
-  // ---------------------------
-
   const creatorId = project.projectCreator.toString();
   if (creatorId !== req.user.id) {
     res.status(403); 

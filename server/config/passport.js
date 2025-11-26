@@ -13,7 +13,7 @@ export default function (passport) {
       async (accessToken, refreshToken, profile, done) => {
         const newUser = {
           googleId: profile.id,
-          name: profile.displayName, // <--- FIXED HERE
+          name: profile.displayName, 
           email: profile.emails[0].value,
         };
 

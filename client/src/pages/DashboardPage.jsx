@@ -65,7 +65,6 @@ const ProjectCard = ({ project, currentUser, onRefresh }) => {
   return (
     <>
       <div className="project-card">
-        {/* Only show controls if isCreator is true */}
         {isCreator && (
           <div className="admin-controls">
             <button onClick={() => setShowEditModal(true)} className="button-icon">
@@ -98,7 +97,6 @@ const ProjectCard = ({ project, currentUser, onRefresh }) => {
                 <span>
                   {member.name} ({member.email})
                 </span>
-                {/* Admin/Creator can remove anyone except the original creator */}
                 {isCreator && member._id !== project.projectCreator?._id && (
                   <button
                     onClick={() => handleRemoveMember(member._id)}

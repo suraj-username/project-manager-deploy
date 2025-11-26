@@ -16,12 +16,11 @@ const ProjectDetailPage = () => {
   const navigate = useNavigate();
   const [project, setProject] = useState(null);
   const [tasks, setTasks] = useState({ root: [], subtasks: {} });
-  const [currentUser, setCurrentUser] = useState(null); // <-- NEW STATE
+  const [currentUser, setCurrentUser] = useState(null); 
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showCreateTaskModal, setShowCreateTaskModal] = useState(false);
 
-  // Memoize tasks into columns for performance
   const taskColumns = useMemo(() => {
     const columns = {
         'Pending Approval': [],
@@ -36,8 +35,7 @@ const ProjectDetailPage = () => {
       });
       return columns;
   }, [tasks.root]);
-
-  // Fetch all data for the page (Project, Tasks, CurrentUser)
+  
   const fetchData = useCallback(async () => {
     try {
       setIsLoading(true);
@@ -120,8 +118,8 @@ const ProjectDetailPage = () => {
                     task={task}
                     subtasks={tasks.subtasks[task._id] || []}
                     project={project}
-                    currentUser={currentUser} // Pass user for permission checks
-                    onRefresh={fetchData} // Fetch all data again on refresh
+                    currentUser={currentUser} 
+                    onRefresh={fetchData} 
                   />
                 ))
               ) : (

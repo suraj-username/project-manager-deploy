@@ -5,7 +5,7 @@ import session from 'express-session';
 import passport from 'passport';
 import configurePassport from './config/passport.js';
 import connectDB from './config/db.js';
-import cors from 'cors'; // Import CORS
+import cors from 'cors'; 
 
 // Routes
 import authRoutes from './routes/auth.routes.js';
@@ -20,11 +20,7 @@ const app = express();
 
 // --- CRITICAL DEPLOYMENT SETTINGS ---
 
-// 1. Trust Proxy: Required for OAuth on Render/Heroku to work over HTTPS
 app.set('trust proxy', 1);
-
-// 2. CORS: Allow the frontend to talk to this backend
-// We use an environment variable so it works for Localhost AND Production automatically
 const allowedOrigins = [
   'http://localhost:5173',                  // Local Development
   process.env.FRONTEND_URL                  // Production (Vercel)
@@ -32,7 +28,6 @@ const allowedOrigins = [
 
 app.use(cors({
   origin: function (origin, callback) {
-    // Allow requests with no origin (like mobile apps or curl requests)
     if (!origin) return callback(null, true);
     if (allowedOrigins.indexOf(origin) === -1) {
       const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
@@ -40,21 +35,16 @@ app.use(cors({
     }
     return callback(null, true);
   },
-  credentials: true // Important for sessions/cookies if we used them (we use tokens, but good practice)
+  credentials: true
 }));
-
-// ------------------------------------
-
 app.use(express.json());
-
-// Session Middleware
 app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
   cookie: {
-    secure: process.env.NODE_ENV === 'production', // Secure cookies in production
-    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax' // Cross-site cookie fix
+    secure: process.env.NODE_ENV === 'production', 
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax' 
   }
 }));
 

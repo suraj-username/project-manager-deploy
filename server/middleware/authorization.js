@@ -11,12 +11,10 @@ export const isTeamMember = asyncHandler(async (req, res, next) => {
         throw new Error("Project not found");
     }
 
-    // --- NEW: Admin Override ---
     if (req.user.role === 'admin') {
         req.project = project;
         return next();
     }
-    // ---------------------------
 
     const creatorId = project.projectCreator.toString();
     if (creatorId === userId) {
@@ -43,13 +41,10 @@ export const isProjectCreator = asyncHandler(async (req, res, next) => {
         res.status(404);
         throw new Error("Project not found");
     }
-
-    // --- NEW: Admin Override ---
     if (req.user.role === 'admin') {
         if (!req.project) req.project = project;
         return next();
     }
-    // ---------------------------
 
     const creatorId = project.projectCreator.toString();
     if (creatorId != userId) {
