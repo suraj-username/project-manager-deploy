@@ -73,10 +73,14 @@ export const deleteProject= asyncHandler(async (req,res)=>{
     await Project.deleteOne({_id:req.project._id});
     res.status(200).json({message:"Project deleted successfully."});
 });
-
+const EMAIL_REGEX = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 export const addMember=asyncHandler(async(req,res)=>{
     const { email } = req.body;
     const project = req.project;
+    if (!EMAIL_REGEX.test(String(email).toLowerCase())) { //change to validate email
+        res.status(400);
+        throw new Error("The provided email address is not in a valid format.");
+    }
     const user=await User.findOne({ email });
     if (!user){
         res.status(400);
